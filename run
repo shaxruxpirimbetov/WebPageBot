@@ -1,0 +1,18 @@
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+python manage.py collectstatic
+
+
+git config --global user.email "shaxruxpirimbetov@gmail.com"
+git config --global user.name "shaxruxpirimbetov"
+
+git remote add origin https://github.com/shaxruxpirimbetov/WebPageBot.git
+
+git clone https://github.com/shaxruxpirimbetov/WebPageBot.git
+
+
+git add .
+git commit -m "WebPageBot"
+git push
