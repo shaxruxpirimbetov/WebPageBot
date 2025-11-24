@@ -35,16 +35,21 @@ def create_user(user):
 
 def create_page(user_id, url):
     cur.execute("INSERT INTO pages(user_id, url) VALUES(?,?)", (user_id, url,))
+    db.commit()
     return True
 
 
 def get_page(*args, **kwargs):
     if kwargs.get("filter"):
-        if not kwargs.get("user_id"):
-            return "user_id are required"
-
-        pages = cur.execute("SELECT * FROM pages WHERE user_id = ?", (kwargs["user_id"],)).fetchall()
-        return pages
-
-
-print(get_page(filter="user_pages"))
+        if kwargs.get("user_id"):
+            pages = cur.execute("SELECT * FROM pages WHERE user_id = ?", (kwargs["user_id"],)).fetchall()
+            return pages
+        
+        elif kwargs.get("page_id"):
+        	page = cur.execute("SELECT * FROM pages WHERE id = ?", (kwargs.get("page_id"),)).fetchone()
+        	return page
+        
+        return "user_id or page_id are required"
+    
+    pages = cur.execute("SELECT * FROM pages").fetchall()
+    return pages

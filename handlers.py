@@ -16,20 +16,23 @@ async def cmd_start(message: Message):
     print(db.create_user(message.from_user))
 
 
-@router.message(F.text == "Deploy Site")
+@router.message(F.text == "My Sites")
 async def deploy_site_func(message: Message):
-    await message.answer("Send ")
-
-
-@router.message(F.text == "My sites")
-async def my_sites_func(message: Message):
-    await message.reply("Wait...")
+    pages = db.get_page(filter="have", user_id=message.from_user.id)
+    text = "Pages\n"
+    print(pages)
+    for i in pages:
+    	print(i)
+    	text += f". {i[2]}\n"
+    await message.reply(text)
 
 
 @router.message(F.document)
 async def get_doc_func(message: Message):
     file = message.document
-    print(file)
+    if not file.file_name.endswith(".html"):
+    	await message.reply("Invalid file")
+    	return
     file_path = await conf.bot.get_file(file.file_id)
     download_path = f"downloads/{file.file_id}.html"
     await conf.bot.download_file(file_path.file_path, download_path)
@@ -39,3 +42,4 @@ async def get_doc_func(message: Message):
         fnc.deploy_site(title="First", html=text, user_id=message.from_user.id)
 
     os.remove(download_path)
+    await message.reply("Done")
